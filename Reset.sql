@@ -1,5 +1,16 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
+-- Clearing tables
+TRUNCATE TABLE Ingredient;
+TRUNCATE TABLE Quantity;
+TRUNCATE TABLE Cookie;
+TRUNCATE TABLE StoredIn;
+TRUNCATE TABLE ShippedIn;
+TRUNCATE TABLE Pallet;
+TRUNCATE TABLE Ordered;
+TRUNCATE TABLE Company;
+TRUNCATE TABLE Orders;
+
 -- Insert start values
 INSERT INTO Ingredient(IngredientName, storedAmount, Unit) VALUES
 ('Bread Crumbs', 500000, 'g' ),
