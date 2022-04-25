@@ -16,17 +16,33 @@ public class Database {
 	private static final String jdbcString = "jdbc:mysql://localhost/krusty";
 
 	// For use with MySQL or PostgreSQL
-	private static final String jdbcUsername = "<CHANGE ME>";
-	private static final String jdbcPassword = "<CHANGE ME>";
+	private static final String jdbcUsername = "";
+	private static final String jdbcPassword = "";
+	private Connection conn = null;
+
 
 	public void connect() {
-		// Connect to database here
-	}
+			try {
+				conn = DriverManager.getConnection (jdbcString, jdbcUsername, jdbcPassword);
+			}
+			catch (SQLException e) {
+				System.err.println(e);
+				e.printStackTrace();
+			}
+		}
 
 	// TODO: Implement and change output in all methods below!
 
 	public String getCustomers(Request req, Response res) {
-		return "{}";
+
+		try (Statement statement = conn.createStatement()) {
+			String sql = "SELECT * FROM Company";
+			ResultSet resultSet = statement.executeQuery(sql);
+			return JSONizer.toJSON(resultSet, "Company");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return "{}";	//If query does not succesfully return results, return placeholder
 	}
 
 	public String getRawMaterials(Request req, Response res) {
