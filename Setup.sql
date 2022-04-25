@@ -1,4 +1,6 @@
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- Drop old tables
 DROP TABLE IF EXISTS Ingredient;
 DROP TABLE IF EXISTS Quantity;
 DROP TABLE IF EXISTS Cookie;
@@ -7,9 +9,9 @@ DROP TABLE IF EXISTS ShippedIn;
 DROP TABLE IF EXISTS Pallet;
 DROP TABLE IF EXISTS Ordered;
 DROP TABLE IF EXISTS Company;
-DROP TABLE IF EXISTS Order;
+DROP TABLE IF EXISTS Orders;
 
-
+-- Create tables
 CREATE TABLE Ingredient (
     IngredientName VARCHAR(200),
     StoredAmount INT,
@@ -34,6 +36,55 @@ CREATE TABLE Quantity (
  	   FOREIGN KEY (IngredientName) REFERENCES Ingredient(IngredientName) 
 );
 
+CREATE TABLE StoredIn (
+    CookieName VARCHAR(200),
+    PalletNumber INT,
+    PRIMARY KEY (CookieName, PalletNumber ),
+    FOREIGN KEY (CookieName) REFERENCES  Cookie(CookieName),
+    FOREIGN KEY (PalletNumber) REFERENCES  Pallet(PalletNumber)
+);
+
+CREATE TABLE ShippedIn(
+    CompanyName VARCHAR(200),
+    PalletNumber INT,
+    PRIMARY KEY (CompanyName, PalletNumber ),
+    FOREIGN KEY (CompanyName) REFERENCES  Company(CompanyName),
+    FOREIGN KEY (PalletNumber) REFERENCES  Pallet(PalletNumber)
+);
+
+CREATE TABLE Pallet(
+	PalletNumber int NOT NULL AUTO_INCREMENT,
+	ProductName VARCHAR(200),
+	TimeOfProduction DATETIME,
+	PalletLocation VARCHAR(200),
+	Blocked BOOL,
+    PRIMARY KEY (PalletNumber)
+);
+
+CREATE TABLE Ordered(
+    NbrPallets INT,
+    FOREIGN KEY (OrderNumber) REFERENCES Orders(OrderNumber),
+    FOREIGN KEY (CookieName) REFERENCES Cookie(CookieName)
+);
+
+create table Company(
+    companyName VARCHAR(200),
+    address VARCHAR(200),
+    phoneNbr INT(10),
+    PRIMARY KEY(companyName) 
+);
+
+create table Orders(
+	OrderNumber INT,
+	companyName VARCHAR(200),
+	shippedDate DATETIME,
+	PalletNumber INT,
+	PRIMARY KEY(OrderNumber),
+	FOREIGN KEY(companyName) references Company(companyName),
+	FOREIGN KEY(PalletNumber) references Company(companyName)
+);
+
+-- Insert start values
 INSERT INTO Ingredient(IngredientName, storedAmount, Unit) VALUES
 ('Bread Crumbs', 500000, 'g' ),
 ('Butter', 500000, 'g'),
