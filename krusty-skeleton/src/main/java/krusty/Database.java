@@ -114,5 +114,6 @@ public class Database {
 
 	public String createPallet(Request req, Response res) {
 		return "{}";
+		//test
 	}
 }
