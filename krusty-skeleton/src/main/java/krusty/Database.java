@@ -72,6 +72,14 @@ public class Database {
 	}
 
 	public String getRecipes(Request req, Response res) {
+		String sql = "SELECT CookieName AS cookie, IngredientName AS ingredient," +
+				"Quantity AS amount, FROM Quantity GROUP BY cookie,ingredient ";
+		try (PreparedStatement ps = conn.prepareStatement(sql)) {
+			ResultSet resultSet = ps.executeQuery();
+			return Jsonizer.toJson(resultSet, "cookies");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return "{}";
 	}
 
@@ -79,7 +87,17 @@ public class Database {
 		return "{\"pallets\":[]}";
 	}
 
+	/*TODO: Fix syntax, properly utilize the Reset.sql file (or redo?)
+	*/
+
 	public String reset(Request req, Response res) {
+		String sql = Reset.sql;
+		try (PreparedStatement ps = conn.prepareStatement(sql)) {
+			ResultSet resultSet = ps.executeQuery();
+			return Jsonizer.toJson(resultSet, "cookies");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return "{}";
 	}
 
