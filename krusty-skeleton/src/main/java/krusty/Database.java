@@ -3,6 +3,7 @@ package krusty;
 import spark.Request;
 import spark.Response;
 
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -90,8 +91,15 @@ public class Database {
 	/*TODO: Fix syntax, properly utilize the Reset.sql file (or redo?)
 	*/
 
-	public String reset(Request req, Response res) {
-		String sql = Reset.sql;
+	public String reset(Request req, Response res) throws IOException {
+		String sql;
+		String currentDirectory = new File("").getAbsolutePath();
+		StringBuilder sb = new StringBuilder();
+		BufferedReader br = new BufferedReader(new FileReader(currentDirectory + "\\Reset.sql"));
+		while(br!=null){
+			sb.append(br.readLine());
+		}
+		sql = sb.toString();
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
 			ResultSet resultSet = ps.executeQuery();
 			return Jsonizer.toJson(resultSet, "cookies");
