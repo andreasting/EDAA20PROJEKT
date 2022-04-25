@@ -130,11 +130,10 @@ INSERT INTO Quantity VALUES
 ('Berliner','Flour', 350),
 ('Berliner','Icing sugar', 100),
 ('Berliner','Vanilla sugar', 5),
-
 ('Nut ring','Butter',450),
 ('Nut ring','Flour',450),
 ('Nut ring','Icing sugar',190),
-('Nut ring','Butter',225),
+('Nut ring','Roasted, chopped nuts',225),
 ('Tango' ,'Butter', 200),
 ('Tango', 'Flour', 300),
 ('Tango', 'Sodium bicarbonate', 4),
