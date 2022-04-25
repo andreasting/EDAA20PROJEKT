@@ -100,9 +100,12 @@ public class Database {
 			sb.append(br.readLine());
 		}
 		sql = sb.toString();
+		sb.setLength(0);
+		br.close();
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
-			ResultSet resultSet = ps.executeQuery();
-			return Jsonizer.toJson(resultSet, "cookies");
+			ps.executeUpdate(sql, ps.RETURN_GENERATED_KEYS);
+			ResultSet resultSet = ps.getGeneratedKeys();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
