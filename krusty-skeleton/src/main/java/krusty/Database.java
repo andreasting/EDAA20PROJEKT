@@ -3,11 +3,16 @@ package krusty;
 import spark.Request;
 import spark.Response;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
-
-import static krusty.Jsonizer.toJson;
 
 public class Database {
 	/**
@@ -37,8 +42,9 @@ public class Database {
 
 		try (Statement statement = conn.createStatement()) {
 			String sql = "SELECT * FROM Company";
-			ResultSet resultSet = statement.executeQuery(sql);
-			return JSONizer.toJSON(resultSet, "Company");
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ResultSet resultSet = ps.executeQuery();
+			return Jsonizer.toJson(resultSet, "Company");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
