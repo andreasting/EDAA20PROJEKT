@@ -1,0 +1,23 @@
+{
+  "raw-materials": [
+    {"name": "Bread crumbs", "amount": 500000, "unit": "g"},
+    {"name": "Butter", "amount": 386600, "unit": "g"},
+    {"name": "Chocolate", "amount": 497300, "unit": "g"},
+    {"name": "Chopped almonds", "amount": 500000, "unit": "g"},
+    {"name": "Cinnamon", "amount": 500000, "unit": "g"},
+    {"name": "Egg whites", "amount": 500000, "unit": "ml"},
+    {"name": "Eggs", "amount": 456800, "unit": "g"},
+    {"name": "Fine-ground nuts", "amount": 500000, "unit": "g"},
+    {"name": "Flour", "amount": 416300, "unit": "g"},
+    {"name": "Ground, roasted nuts", "amount": 500000, "unit": "g"},
+    {"name": "Icing sugar", "amount": 474080, "unit": "g"},
+    {"name": "Marzipan", "amount": 378500, "unit": "g"},
+    {"name": "Potato starch", "amount": 495950, "unit": "g"},
+    {"name": "Roasted, chopped nuts", "amount": 475700, "unit": "g"},
+    {"name": "Sodium bicarbonate", "amount": 499784, "unit": "g"},
+    {"name": "Sugar", "amount": 486500, "unit": "g"},
+    {"name": "Vanilla", "amount": 499892, "unit": "g"},
+    {"name": "Vanilla sugar", "amount": 499730, "unit": "g"},
+    {"name": "Wheat flour", "amount": 495950, "unit": "g"}
+  ]
+}

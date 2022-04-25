@@ -1,0 +1,12 @@
+{
+  "customers": [
+    {"name": "Bjudkakor AB", "address": "Ystad"},
+    {"name": "Finkakor AB", "address": "Helsingborg"},
+    {"name": "Gästkakor AB", "address": "Hässleholm"},
+    {"name": "Kaffebröd AB", "address": "Landskrona"},
+    {"name": "Kalaskakor AB", "address": "Trelleborg"},
+    {"name": "Partykakor AB", "address": "Kristianstad"},
+    {"name": "Skånekakor AB", "address": "Perstorp"},
+    {"name": "Småbröd AB", "address": "Malmö"}
+  ]
+}
