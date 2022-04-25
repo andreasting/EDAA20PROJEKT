@@ -42,7 +42,7 @@ public class Database {
 		String sql = "SELECT companyName as name, address FROM Company";
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
 			ResultSet resultSet = ps.executeQuery();
-			return Jsonizer.toJson(resultSet, "Company");
+			return Jsonizer.toJson(resultSet, "companies");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -53,7 +53,7 @@ public class Database {
 		String sql = "SELECT IngredientName as name, StoredAmount as amount, Unit as unit FROM Ingredient";
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
 			ResultSet resultSet = ps.executeQuery();
-			return Jsonizer.toJson(resultSet, "Ingredient");
+			return Jsonizer.toJson(resultSet, "ingredients");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -61,7 +61,14 @@ public class Database {
 	}
 
 	public String getCookies(Request req, Response res) {
-		return "{\"cookies\":[]}";
+		String sql = "SELECT CookieName as name FROM Cookie";
+		try (PreparedStatement ps = conn.prepareStatement(sql)) {
+			ResultSet resultSet = ps.executeQuery();
+			return Jsonizer.toJson(resultSet, "cookies");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return "{}";
 	}
 
 	public String getRecipes(Request req, Response res) {
