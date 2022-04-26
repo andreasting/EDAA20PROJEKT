@@ -48,10 +48,10 @@ CREATE TABLE StoredIn (
 );
 
 CREATE TABLE ShippedIn(
-    CompanyName VARCHAR(200),
+    OrderNumber INT,
     PalletNumber INT,
-    PRIMARY KEY (CompanyName, PalletNumber ),
-    FOREIGN KEY (CompanyName) REFERENCES  Company(CompanyName),
+    PRIMARY KEY (OrderNumber, PalletNumber ),
+    FOREIGN KEY (OrderNumber) REFERENCES  Orders(OrderNumber),
     FOREIGN KEY (PalletNumber) REFERENCES  Pallet(PalletNumber)
 );
 
@@ -67,6 +67,7 @@ CREATE TABLE Pallet(
 CREATE TABLE Ordered(
     OrderNumber INT,
     CookieName VARCHAR(30),
+    PRIMARY KEY (CookieName, OrderNumber),
     FOREIGN KEY (OrderNumber) REFERENCES Orders(OrderNumber),
     FOREIGN KEY (CookieName) REFERENCES Cookie(CookieName)
 );
