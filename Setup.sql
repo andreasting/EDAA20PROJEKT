@@ -82,7 +82,6 @@ create table Orders(
     OrderNumber INT,
     companyName VARCHAR(200),
     shippedDate DATETIME,
-    PalletNumber INT,
     PRIMARY KEY(OrderNumber),
     FOREIGN KEY(companyName) references Company(companyName)
 );

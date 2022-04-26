@@ -85,6 +85,8 @@ public class Database {
 	}
 
 	public String getPallets(Request req, Response res) {
+		
+
 		return "{\"pallets\":[]}";
 	}
 
@@ -114,6 +116,5 @@ public class Database {
 
 	public String createPallet(Request req, Response res) {
 		return "{}";
-		//test
 	}
 }
