@@ -10,6 +10,9 @@ DROP TABLE IF EXISTS Pallet;
 DROP TABLE IF EXISTS Ordered;
 DROP TABLE IF EXISTS Company;
 DROP TABLE IF EXISTS Orders;
+-- SET FOREIGN_KEY_CHECKS = 1;
+
+
 
 -- Create tables
 CREATE TABLE Ingredient (
@@ -29,11 +32,11 @@ CREATE TABLE Cookie (
 
 CREATE TABLE Quantity (
     CookieName VARCHAR(200),
-  	  IngredientName VARCHAR(200),
-  	  IngAmount INT,
-  	  PRIMARY KEY (IngredientName, CookieName), 
+    IngredientName VARCHAR(200),
+    IngAmount INT,
+    PRIMARY KEY (IngredientName, CookieName), 
     FOREIGN KEY (CookieName) REFERENCES Cookie(CookieName),
- 	   FOREIGN KEY (IngredientName) REFERENCES Ingredient(IngredientName) 
+    FOREIGN KEY (IngredientName) REFERENCES Ingredient(IngredientName) 
 );
 
 CREATE TABLE StoredIn (
@@ -53,16 +56,17 @@ CREATE TABLE ShippedIn(
 );
 
 CREATE TABLE Pallet(
-	PalletNumber int NOT NULL AUTO_INCREMENT,
-	ProductName VARCHAR(200),
-	TimeOfProduction DATETIME,
-	PalletLocation VARCHAR(200),
-	Blocked BOOL,
+    PalletNumber int NOT NULL AUTO_INCREMENT,
+    ProductName VARCHAR(200),
+    TimeOfProduction DATETIME,
+    PalletLocation VARCHAR(200),
+    Blocked BOOL,
     PRIMARY KEY (PalletNumber)
 );
 
 CREATE TABLE Ordered(
-    NbrPallets INT,
+    OrderNumber INT,
+    CookieName VARCHAR(30),
     FOREIGN KEY (OrderNumber) REFERENCES Orders(OrderNumber),
     FOREIGN KEY (CookieName) REFERENCES Cookie(CookieName)
 );
@@ -75,13 +79,12 @@ create table Company(
 );
 
 create table Orders(
-	OrderNumber INT,
-	companyName VARCHAR(200),
-	shippedDate DATETIME,
-	PalletNumber INT,
-	PRIMARY KEY(OrderNumber),
-	FOREIGN KEY(companyName) references Company(companyName),
-	FOREIGN KEY(PalletNumber) references Company(companyName)
+    OrderNumber INT,
+    companyName VARCHAR(200),
+    shippedDate DATETIME,
+    PalletNumber INT,
+    PRIMARY KEY(OrderNumber),
+    FOREIGN KEY(companyName) references Company(companyName)
 );
 
 -- Insert start values
