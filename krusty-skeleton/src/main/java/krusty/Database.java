@@ -104,12 +104,18 @@ public class Database {
 			sql += "AND TimeOfProduction < ? ";
 			value.add(req.queryParams("to"));
 		}
-		if(req.queryParams("CookieName") != null ){
+		if(req.queryParams("cookie") != null ){
 			sql += "AND CookieName = ? ";
-			value.add(req.queryParams("CookieName"));
+			value.add(req.queryParams("cookie"));
 		}
 		if(req.queryParams("Blocked") != null ){
-			sql += "";
+			int s;
+			if(req.queryParams("Blocked") == "yes"){
+				s = 1;
+			}else{
+				s = 0;
+			}
+			sql += "AND Blocked = ? ";
 			value.add(req.queryParams("Blocked"));
 		}
 
