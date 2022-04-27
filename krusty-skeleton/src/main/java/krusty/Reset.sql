@@ -68,7 +68,7 @@ INSERT INTO Quantity VALUES
 ('Tango', 'Vanilla', 2);
 
 
-INSERT INTO Cookie(cookieName) VALUES 
+INSERT INTO Cookie VALUES
 ('Almond delight'),
 ('Amneris'),
 ('Berliner'),
