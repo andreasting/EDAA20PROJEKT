@@ -170,6 +170,48 @@ Executes the update,  clears and returns the auto-incremented keys
 	}
 
 	public String createPallet(Request req, Response res) {
-		return "{}";
+		String sql =	"INSERT INTO Pallet(ProductName,TimeOfProduction,PalletLocation,Blocked) VALUES " +
+						"(?,NOW(),?,0)";
+		
+		String sql2=	"select max(PalletNumber) as lastPallet " +
+						"from Pallet";
+
+		String cookieName = "";
+		int palletID = 0;
+
+		if(req.queryParams("cookie") != null ){
+			cookieName = req.queryParams("CookieName");
+		}
+
+		try(PreparedStatement ps = conn.prepareStatement(sql);
+			PreparedStatement ps2 = conn.prepareStatement(sql2);
+			){
+			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+            conn.setAutoCommit(false);
+
+			ps.setString(1, cookieName); // ProductName
+			ps.setString(2, "TestLocation"); // PalletLocation
+			
+			ps.executeQuery();
+
+			ResultSet rs2 = ps2.executeQuery();
+			while(rs2.next()){
+				palletID = rs2.getInt("lastPallet");
+			}
+
+			conn.commit();
+            conn.setAutoCommit(true);
+
+		} catch(SQLException e) {
+            try {
+                conn.rollback();
+                conn.setAutoCommit(true);
+                e.printStackTrace();
+            } catch(SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+		
+		return "{\"status\": \"ok\",\n\"id\": " + palletID + "}";
 	}
 }
