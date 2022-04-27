@@ -4,16 +4,14 @@ import spark.Request;
 import spark.Response;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class Database {
 	/**
@@ -138,34 +136,17 @@ public class Database {
 	*/
 
 	public String reset(Request req, Response res) throws IOException {
-		String sql;
-		String line;
-		String currentDirectory = new File("").getAbsolutePath();	//Gets the current directory on the users's computer
-		StringBuilder sb = new StringBuilder();
-		try(BufferedReader br = new BufferedReader(new FileReader
-				(currentDirectory + "\\Reset.sql"))) {
-
-			while((line = br.readLine()) !=null)
-			{
-				sb.append(line);
-			}
-		}
-		catch(FileNotFoundException err){
-			System.out.println(err);
-		}
-
-		sql = sb.toString();		// Assigns the string builder's contents to a string
-		sb.setLength(0);			//Empty the string builder
+		String sql = readFile("main/java/krusty/Reset.sql");
 
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
 			ps.executeUpdate(sql, ps.RETURN_GENERATED_KEYS);
 			ResultSet resultSet = ps.getGeneratedKeys();
-			return "Status OK";
 /*
 Executes the update,  clears and returns the auto-incremented keys
  */
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return "{\"status\": \"error\"}";
 		}
 
 		return "{\"status\": \"ok\"}"; //For this endpoint, return the following JSON object: "status": "ok"
@@ -261,4 +242,17 @@ Executes the update,  clears and returns the auto-incremented keys
 		}
 		return true;
 	}
+	protected String readFile(String file) {
+		try {
+			String path = "src/main/java.krusty/" + file;
+			return new String(Files.readAllBytes(Paths.get(path)));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	// Repurposed method from krustytests
 }
+
+
+
