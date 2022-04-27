@@ -60,7 +60,7 @@ CREATE TABLE Pallet(
     ProductName VARCHAR(200),
     TimeOfProduction DATETIME,
     PalletLocation VARCHAR(200),
-    Blocked BOOL,
+    Blocked TINYINT(1),
     PRIMARY KEY (PalletNumber)
 );
 
