@@ -1,0 +1,30 @@
+{
+    "sqltools.connections": [
+        {
+            "database": "hbg22",
+            "driver": "MySQL",
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "name": "hbg22",
+            "password": "zva048pv",
+            "port": 3306,
+            "previewLimit": 50,
+            "server": "puccini.cs.lth.se",
+            "username": "hbg22"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "localhost",
+            "database": "hemmadb",
+            "username": "dbpro",
+            "password": "serveradmin1337"
+        }
+    ]
+}

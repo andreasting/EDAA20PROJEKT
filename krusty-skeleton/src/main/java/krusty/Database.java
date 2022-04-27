@@ -17,11 +17,11 @@ public class Database {
 	/**
 	 * Modify it to fit your environment and then use this string when connecting to your database!
 	 */
-	private static final String jdbcString = "jdbc:mysql://localhost/krusty";
+	private static final String jdbcString = "jdbc:mysql://localhost/hemmadb";
 
 	// For use with MySQL or PostgreSQL
-	private static final String jdbcUsername = "";
-	private static final String jdbcPassword = "";
+	private static final String jdbcUsername = "dbpro";
+	private static final String jdbcPassword = "serveradmin1337";
 	private Connection conn = null;
 
 	private static int COOKIE_MULT = 5400; // 15*10*36 amount of cookies in a pallet
@@ -108,9 +108,9 @@ public class Database {
 			sql += "AND CookieName = ? ";
 			value.add(req.queryParams("cookie"));
 		}
-		if(req.queryParams("Blocked") != null ){
+		if(req.queryParams("blocked") != null ){
 			int s;
-			if(req.queryParams("Blocked") == "yes"){
+			if(req.queryParams("blocked") == "yes"){
 				s = 1;
 			}else{
 				s = 0;
@@ -136,7 +136,8 @@ public class Database {
 	*/
 
 	public String reset(Request req, Response res) throws IOException {
-		String sql = readFile("main/java/krusty/Reset.sql");
+		String sql = readFile("Reset.sql");
+		System.out.print(sql);
 
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
 			ps.executeUpdate(sql, ps.RETURN_GENERATED_KEYS);
@@ -153,24 +154,27 @@ Executes the update,  clears and returns the auto-incremented keys
 	}
 
 	public String createPallet(Request req, Response res) {
-		String sql0 = 	"select count(*) as Exists from Cookie" +
-						"where CookieName = ?";
+		String sql0 = 	"SELECT count(*) as inList FROM Cookie " +
+						"WHERE CookieName = ? ";
 
 		String sql =	"INSERT INTO Pallet(ProductName,TimeOfProduction,PalletLocation,Blocked) VALUES " +
 						"(?,NOW(),?,0)";
 
-		String sql2=	"SELECT IngredientName, IngAmount"+
-						"FROM Quantity" +
-						"WHERE CookieName = ?";
+		String sql2=	"SELECT IngredientName, IngAmount "+
+						"FROM Quantity " +
+						"WHERE CookieName = ? ";
 
-		String sql4=	"select max(PalletNumber) as lastPallet " +
-						"from Pallet";
+		String sql4=	"SELECT max(PalletNumber) as lastPallet " +
+						"FROM Pallet";
 
 		String cookieName = "";
 		int palletID = 0;
 
 		if(req.queryParams("cookie") != null ){
-			cookieName = req.queryParams("CookieName");
+			cookieName = req.queryParams("cookie");
+		} else {
+			System.out.print("-------1------------"+cookieName);
+			return "{\"status\": \"error no cookieName\"}";
 		}
 
 		try(PreparedStatement ps0 = conn.prepareStatement(sql0);
@@ -181,13 +185,15 @@ Executes the update,  clears and returns the auto-incremented keys
 			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
             conn.setAutoCommit(false);
 
+			System.out.print("--------------------------"+cookieName);
 			ps0.setString(1, cookieName);
 
 			ResultSet rs0 = ps0.executeQuery();
-			if (rs0.getInt("Exists") == 0) {
+			rs0.next();
+			if (rs0.getInt("inList") == 0) {
 				conn.rollback();
                 conn.setAutoCommit(true);
-				return "{\"status\": \"error\"}";
+				return "{\"status\": \"error cookieName doesn't exist\"}";
 			}
 
 			ps.setString(1, cookieName); // ProductName
@@ -201,7 +207,7 @@ Executes the update,  clears and returns the auto-incremented keys
 				if (!updateIngredient(rs2.getString("IngredientName"), rs2.getInt("IngAmount"))) {
 					conn.rollback();
                 	conn.setAutoCommit(true);
-					return "{\"status\": \"error\"}";
+					return "{\"status\": \"error could not update ingredient\"}";
 				}
 				
 			}
@@ -244,9 +250,10 @@ Executes the update,  clears and returns the auto-incremented keys
 	}
 	protected String readFile(String file) {
 		try {
-			String path = "src/main/java.krusty/" + file;
+			String path = "krusty-skeleton\\src\\main\\java\\krusty\\" + file;
 			return new String(Files.readAllBytes(Paths.get(path)));
 		} catch (IOException e) {
+			
 			e.printStackTrace();
 		}
 		return "";
