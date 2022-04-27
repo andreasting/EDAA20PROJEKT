@@ -147,7 +147,7 @@ public class Database {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return "{}";
+		return "{\"status\": \"ok\"}"; //For this endpoint, return the following JSON object: "status": "ok"
 	}
 
 	public String createPallet(Request req, Response res) {
