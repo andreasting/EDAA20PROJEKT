@@ -180,7 +180,7 @@ Executes the update,  clears and returns the auto-incremented keys
 
 		String sql2=	"SELECT IngredientName, IngAmount"+
 						"FROM Quantity" +
-						"WHERE CookieName = 'Tango'";
+						"WHERE CookieName = ?";
 
 		String sql4=	"select max(PalletNumber) as lastPallet " +
 						"from Pallet";
@@ -204,6 +204,8 @@ Executes the update,  clears and returns the auto-incremented keys
 
 			ResultSet rs0 = ps0.executeQuery();
 			if (rs0.getInt("Exists") == 0) {
+				conn.rollback();
+                conn.setAutoCommit(true);
 				return "{\"status\": \"error\"}";
 			}
 
@@ -212,10 +214,13 @@ Executes the update,  clears and returns the auto-incremented keys
 			
 			ps.executeQuery();
 
+			ps2.setString(1, cookieName);
 			ResultSet rs2 = ps2.executeQuery();
 			while(rs2.next()){
 				if (!updateIngredient(rs2.getString("IngredientName"), rs2.getInt("IngAmount"))) {
-					//todo
+					conn.rollback();
+                	conn.setAutoCommit(true);
+					return "{\"status\": \"error\"}";
 				}
 				
 			}
@@ -242,7 +247,7 @@ Executes the update,  clears and returns the auto-incremented keys
 	}
 
 	public boolean updateIngredient(String name,int amount){
-		String sql = 	"UPDATE Ingredients SET " + "StoredAmount -= ? "+
+		String sql = 	"UPDATE Ingredient SET " + "StoredAmount -= ? "+
 						"WHERE IngredientName = ?";
 
 		try(PreparedStatement ps = conn.prepareStatement(sql)){
