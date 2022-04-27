@@ -26,6 +26,8 @@ public class Database {
 	private static final String jdbcPassword = "";
 	private Connection conn = null;
 
+	private static int COOKIE_MULT = 5400; // 15*10*36 amount of cookies in a pallet
+
 
 	public void connect() {
 			try {
@@ -74,7 +76,7 @@ public class Database {
 
 	public String getRecipes(Request req, Response res) {
 		String sql = "SELECT CookieName AS cookie, IngredientName AS ingredient," +
-				"Quantity AS amount, FROM Quantity GROUP BY cookie,ingredient ";
+				"IngAmount AS amount FROM Quantity GROUP BY cookie,ingredient ";
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
 			ResultSet resultSet = ps.executeQuery();
 			return Jsonizer.toJson(resultSet, "cookies");
@@ -170,10 +172,17 @@ Executes the update,  clears and returns the auto-incremented keys
 	}
 
 	public String createPallet(Request req, Response res) {
+		String sql0 = 	"select count(*) as Exists from Cookie" +
+						"where CookieName = ?";
+
 		String sql =	"INSERT INTO Pallet(ProductName,TimeOfProduction,PalletLocation,Blocked) VALUES " +
 						"(?,NOW(),?,0)";
-		
-		String sql2=	"select max(PalletNumber) as lastPallet " +
+
+		String sql2=	"SELECT IngredientName, IngAmount"+
+						"FROM Quantity" +
+						"WHERE CookieName = 'Tango'";
+
+		String sql4=	"select max(PalletNumber) as lastPallet " +
 						"from Pallet";
 
 		String cookieName = "";
@@ -183,11 +192,20 @@ Executes the update,  clears and returns the auto-incremented keys
 			cookieName = req.queryParams("CookieName");
 		}
 
-		try(PreparedStatement ps = conn.prepareStatement(sql);
+		try(PreparedStatement ps0 = conn.prepareStatement(sql0);
+			PreparedStatement ps = conn.prepareStatement(sql);
 			PreparedStatement ps2 = conn.prepareStatement(sql2);
+			PreparedStatement ps4 = conn.prepareStatement(sql4);
 			){
 			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
             conn.setAutoCommit(false);
+
+			ps0.setString(1, cookieName);
+
+			ResultSet rs0 = ps0.executeQuery();
+			if (rs0.getInt("Exists") == 0) {
+				return "{\"status\": \"error\"}";
+			}
 
 			ps.setString(1, cookieName); // ProductName
 			ps.setString(2, "TestLocation"); // PalletLocation
@@ -196,7 +214,15 @@ Executes the update,  clears and returns the auto-incremented keys
 
 			ResultSet rs2 = ps2.executeQuery();
 			while(rs2.next()){
-				palletID = rs2.getInt("lastPallet");
+				if (!updateIngredient(rs2.getString("IngredientName"), rs2.getInt("IngAmount"))) {
+					//todo
+				}
+				
+			}
+
+			ResultSet rs4 = ps4.executeQuery();
+			while(rs4.next()){
+				palletID = rs4.getInt("lastPallet");
 			}
 
 			conn.commit();
@@ -213,5 +239,21 @@ Executes the update,  clears and returns the auto-incremented keys
         }
 		
 		return "{\"status\": \"ok\",\n\"id\": " + palletID + "}";
+	}
+
+	public boolean updateIngredient(String name,int amount){
+		String sql = 	"UPDATE Ingredients SET " + "StoredAmount -= ? "+
+						"WHERE IngredientName = ?";
+
+		try(PreparedStatement ps = conn.prepareStatement(sql)){
+			ps.setInt(1, amount*COOKIE_MULT);
+			ps.setString(2, name);
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 }
