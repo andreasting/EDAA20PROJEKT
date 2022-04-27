@@ -137,22 +137,35 @@ public class Database {
 
 	public String reset(Request req, Response res) throws IOException {
 		String sql;
-		String currentDirectory = new File("").getAbsolutePath();
+		String line;
+		String currentDirectory = new File("").getAbsolutePath();	//Gets the current directory on the users's computer
 		StringBuilder sb = new StringBuilder();
-		BufferedReader br = new BufferedReader(new FileReader(currentDirectory + "\\Reset.sql"));
-		while(br!=null){
-			sb.append(br.readLine());
+		try(BufferedReader br = new BufferedReader(new FileReader
+				(currentDirectory + "\\Reset.sql"))) {
+
+			while((line = br.readLine()) !=null)
+			{
+				sb.append(line);
+			}
 		}
-		sql = sb.toString();
-		sb.setLength(0);
-		br.close();
+		catch(FileNotFoundException err){
+			System.out.println(err);
+		}
+
+		sql = sb.toString();		// Assigns the string builder's contents to a string
+		sb.setLength(0);			//Empty the string builder
+
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
 			ps.executeUpdate(sql, ps.RETURN_GENERATED_KEYS);
 			ResultSet resultSet = ps.getGeneratedKeys();
-
+			return "Status OK";
+/*
+Executes the update,  clears and returns the auto-incremented keys
+ */
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
 		return "{}";
 	}
 
