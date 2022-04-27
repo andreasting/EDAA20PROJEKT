@@ -10,7 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
@@ -85,6 +85,42 @@ public class Database {
 	}
 
 	public String getPallets(Request req, Response res) {
+		String sql = "SELECT PalletNumber, CookieName, TimeOfProduction, companyName, Blocked " +
+					 "FROM StoredIn " +
+					 "JOIN Pallet " +
+					 "USING (PalletNumber) " +
+ 					 "JOIN ShippedIn " +
+					 "USING (PalletNumber) " +
+					 "JOIN Orders " +
+					 "USING (OrderNumber) " +
+					 "ORDER BY TimeOfProduction DESC ";
+
+		ArrayList<String> value = new ArrayList<String>();
+		if(req.queryParams("from") != null ){
+			sql += "WHERE TimeOfProduction > ? ";
+			value.add(req.queryParams("from"));
+		}	
+		if(req.queryParams("to") != null ){
+			sql += "AND TimeOfProduction < ? ";
+			value.add(req.queryParams("to"));
+		}
+		if(req.queryParams("CookieName") != null ){
+			sql += "AND CookieName = ? ";
+			value.add(req.queryParams("CookieName"));
+		}
+		if(req.queryParams("Blocked") != null ){
+			sql += "";
+			value.add(req.queryParams("Blocked"));
+		}
+
+		try (PreparedStatement stmt = conn.prepareStatement(sql)) { 
+			for (int i = 0; i < value.size(); i++) { 
+			  stmt.setString(i+1, value.get(i)); 
+			} 
+			 
+		  } catch (SQLException e) { 
+			e.printStackTrace();
+		  } 
 		
 
 		return "{\"pallets\":[]}";
