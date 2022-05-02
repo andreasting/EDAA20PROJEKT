@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class Database {
 	/**
@@ -136,21 +137,20 @@ public class Database {
 	*/
 
 	public String reset(Request req, Response res) throws IOException {
-		String sql = readFile("Reset.sql");
-		System.out.print(sql);
+		String sqlRead = readFile("Reset.sql");
+		String[] sqlSplit = sqlRead.split(Pattern.quote(";"));
 
-		try (PreparedStatement ps = conn.prepareStatement(sql)) {
-			ps.executeUpdate(sql, ps.RETURN_GENERATED_KEYS);
-			ResultSet resultSet = ps.getGeneratedKeys();
-/*
-Executes the update,  clears and returns the auto-incremented keys
- */
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return "{\"status\": \"error\"}";
+		for (String sql : sqlSplit) {
+			sql += ";" ;
+			try (PreparedStatement ps = conn.prepareStatement(sql)) {
+				ps.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return "{\"status\": \"error\"}";
+			}
 		}
 
-		return "{\"status\": \"ok\"}"; //For this endpoint, return the following JSON object: "status": "ok"
+		return "{\"status\": \"ok\"}";   // For this endpoint, return the following JSON object: "status": "ok"
 	}
 
 	public String createPallet(Request req, Response res) {
