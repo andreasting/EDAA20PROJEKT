@@ -17,7 +17,7 @@ public class Database {
 	/**
 	 * Modify it to fit your environment and then use this string when connecting to your database!
 	 */
-	private static final String jdbcString = "jdbc:mysql://localhost/hemmadb";
+	private static final String jdbcString = "jdbc:mysql://localhost/hemmadb?serverTimezone=UTC";
 
 	// For use with MySQL or PostgreSQL
 	private static final String jdbcUsername = "dbpro";
@@ -199,7 +199,7 @@ Executes the update,  clears and returns the auto-incremented keys
 			ps.setString(1, cookieName); // ProductName
 			ps.setString(2, "TestLocation"); // PalletLocation
 			
-			ps.executeQuery();
+			ps.executeUpdate();
 
 			ps2.setString(1, cookieName);
 			ResultSet rs2 = ps2.executeQuery();

@@ -13,7 +13,7 @@ public class ServerMain {
 	private Database db;
 	
 	public void startServer() {
-		staticFiles.location("/public?serverTimezone=UTC");
+		staticFiles.location("/public");
 
 		db = new Database();
 		db.connect();
