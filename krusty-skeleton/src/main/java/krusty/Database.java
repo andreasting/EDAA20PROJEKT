@@ -234,7 +234,7 @@ public class Database {
 	}
 
 	public boolean updateIngredient(String name,int amount){
-		String sql = 	"UPDATE Ingredient SET " + "StoredAmount -= ? "+
+		String sql = 	"UPDATE Ingredient SET " + "StoredAmount = StoredAmount - ? "+
 						"WHERE IngredientName = ?";
 
 		try(PreparedStatement ps = conn.prepareStatement(sql)){
