@@ -19,11 +19,11 @@ public class Database {
 	/**
 	 * Modify it to fit your environment and then use this string when connecting to your database!
 	 */
-	private static final String jdbcString = "jdbc:mysql://localhost/project?serverTimezone=UTC";
+	private static final String jdbcString = "jdbc:mysql://localhost/hemmadb?serverTimezone=UTC";
 
 	// For use with MySQL or PostgreSQL
-	private static final String jdbcUsername = "root";
-	private static final String jdbcPassword = "password";
+	private static final String jdbcUsername = "dbpro";
+	private static final String jdbcPassword = "serveradmin1337";
 	private Connection conn = null;
 
 	private static int COOKIE_MULT = 5400; // 15*10*36 amount of cookies in a pallet
@@ -92,13 +92,12 @@ public class Database {
 	*/
 	public String getPallets(Request req, Response res) {
 
-		//int param = -1;
 		Statement stmt;
 		try{
 		stmt = conn.createStatement();
 		 
 		
-		String sql = "SELECT ProductName, PalletNumber, TimeOfProduction, companyName, Blocked " +	
+		String sql = "SELECT PalletNumber as id, ProductName as cookie, TimeOfProduction as production_date, companyName as customer, IF(Blocked, 'yes', 'no') as blocked " +	
 					 "FROM Pallet " +
 					 "LEFT JOIN StoredIn " +
 					 "USING (PalletNumber) " +
@@ -106,68 +105,41 @@ public class Database {
 					 "USING (PalletNumber) " +
 					 "LEFT JOIN Orders " +
 					 "USING (OrderNumber) " +
-					 "WHERE PalletNumber IS NOT NULL ";
-					
-
-		ArrayList<String> value = new ArrayList<String>();
-
+					 "WHERE PalletNumber IS NOT NULL "; // TODO: ska man inte kunna välja vad i select som ska visas. Jämför med expectedpalletsbycookie
 		
 		if(req.queryParams("from") != null ){
 			sql += " AND TimeOfProduction > " + req.queryParams("from");
-			/*value.add(req.queryParams("from"));
-			param++;
-			*/
+
 		}	
 		if(req.queryParams("to") != null ){
 			sql += " AND TimeOfProduction < " + req.queryParams("to") ;
-			/*value.add(req.queryParams("to"));
-			
-			param++;
-			*/
+
 		}
 		if(req.queryParams("cookie") != null ){
-			sql += " AND CookieName = '" + req.queryParams("cookie" +"'") ;
-			/*value.add(req.queryParams("cookie"));
-			param++;
-			*/
+			sql += " AND CookieName = '" + req.queryParams("cookie") + "'" ;
+
 		}
 		if(req.queryParams("blocked") != null ){
-		/*	int s;
-			if(req.queryParams("blocked") == "yes"){
-				s = 1;
-			}else{
-				s = 0;
-			}
-			*/
+
 			sql += " AND Blocked = " + req.queryParams("Blocked");
-			/*param++;
-			value.add(req.queryParams("Blocked"));
-			*/
+
 		}
 
-	//	sql += 	" ORDER BY TimeOfProduction DESC ";
+	sql += ";";
+	// System.out.println(sql); troubleshooting
 
-
-	System.out.println(sql);
 		try {
-			ResultSet rs = stmt.executeQuery( "sql" );
-			try {
-			  while ( rs.next() ) {
-				System.out.println( "Name: " + rs.getString("FULL_NAME") );
-			  }}
-			  catch (SQLException e) {
+			ResultSet rs = stmt.executeQuery(sql);
+			return Jsonizer.toJson(rs, "pallets");
+			//rs.close(); ? TODO: behövs?
+		
+		} catch (SQLException e) {
 				e.printStackTrace();
 				return "{\"status\": \"error\"}";
-			} finally {
-			  try { rs.close(); } catch (Exception foo) { }
-			}}
-			catch (SQLException e) {
-				e.printStackTrace();
-				return "{\"status\": \"error\"}";
-		  } finally {
+		} finally {
 			try { stmt.close(); } catch (Exception foo) { }
 		  
-		 
+
 		}
 	}catch(SQLException e) {
 		e.printStackTrace();
@@ -176,8 +148,10 @@ public class Database {
 		return "{}";
 	}
 
-	/*TODO: Fix syntax, properly utilize the Reset.sql file (or redo?)
+	/*TODO: åäö in reset.sql when file is read
 	*/
+
+	// TODO: reset behöver fylla i orders, shippedin m.m för att pallets ska kunna läsas
 
 	public String reset(Request req, Response res) throws IOException {
 		String sqlRead = readFile("Reset.sql");
@@ -290,6 +264,7 @@ public class Database {
 		}
 		return true;
 	}
+
 	protected String readFile(String file) {
 		try {
 			String path = "krusty-skeleton\\src\\main\\java\\krusty\\" + file;
