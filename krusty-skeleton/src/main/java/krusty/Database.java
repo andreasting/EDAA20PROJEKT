@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -18,11 +19,11 @@ public class Database {
 	/**
 	 * Modify it to fit your environment and then use this string when connecting to your database!
 	 */
-	private static final String jdbcString = "jdbc:mysql://localhost/hemmadb?serverTimezone=UTC";
+	private static final String jdbcString = "jdbc:mysql://localhost/project?serverTimezone=UTC";
 
 	// For use with MySQL or PostgreSQL
-	private static final String jdbcUsername = "dbpro";
-	private static final String jdbcPassword = "serveradmin1337";
+	private static final String jdbcUsername = "root";
+	private static final String jdbcPassword = "password";
 	private Connection conn = null;
 
 	private static int COOKIE_MULT = 5400; // 15*10*36 amount of cookies in a pallet
@@ -44,7 +45,7 @@ public class Database {
 		String sql = "SELECT companyName as name, address FROM Company";
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
 			ResultSet resultSet = ps.executeQuery();
-			return Jsonizer.toJson(resultSet, "companies");
+			return Jsonizer.toJson(resultSet, "customers");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -55,7 +56,7 @@ public class Database {
 		String sql = "SELECT IngredientName as name, StoredAmount as amount, Unit as unit FROM Ingredient";
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
 			ResultSet resultSet = ps.executeQuery();
-			return Jsonizer.toJson(resultSet, "ingredients");
+			return Jsonizer.toJson(resultSet, "raw-materials");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -78,59 +79,101 @@ public class Database {
 				"IngAmount AS amount FROM Quantity GROUP BY cookie,ingredient ";
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
 			ResultSet resultSet = ps.executeQuery();
-			return Jsonizer.toJson(resultSet, "cookies");
+			return Jsonizer.toJson(resultSet, "recipes");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return "{}";
 	}
 
+
+	/* TODO - Find out why JDBC is crying about our syntax
+
+	*/
 	public String getPallets(Request req, Response res) {
-		String sql = "SELECT PalletNumber, CookieName, TimeOfProduction, companyName, Blocked " +
-					 "FROM StoredIn " +
-					 "JOIN Pallet " +
+
+		//int param = -1;
+		Statement stmt;
+		try{
+		stmt = conn.createStatement();
+		 
+		
+		String sql = "SELECT ProductName, PalletNumber, TimeOfProduction, companyName, Blocked " +	
+					 "FROM Pallet " +
+					 "LEFT JOIN StoredIn " +
 					 "USING (PalletNumber) " +
- 					 "JOIN ShippedIn " +
+ 					 "LEFT JOIN ShippedIn " +
 					 "USING (PalletNumber) " +
-					 "JOIN Orders " +
+					 "LEFT JOIN Orders " +
 					 "USING (OrderNumber) " +
-					 "ORDER BY TimeOfProduction DESC ";
+					 "WHERE PalletNumber IS NOT NULL ";
+					
 
 		ArrayList<String> value = new ArrayList<String>();
+
+		
 		if(req.queryParams("from") != null ){
-			sql += "WHERE TimeOfProduction > ? ";
-			value.add(req.queryParams("from"));
+			sql += " AND TimeOfProduction > " + req.queryParams("from");
+			/*value.add(req.queryParams("from"));
+			param++;
+			*/
 		}	
 		if(req.queryParams("to") != null ){
-			sql += "AND TimeOfProduction < ? ";
-			value.add(req.queryParams("to"));
+			sql += " AND TimeOfProduction < " + req.queryParams("to") ;
+			/*value.add(req.queryParams("to"));
+			
+			param++;
+			*/
 		}
 		if(req.queryParams("cookie") != null ){
-			sql += "AND CookieName = ? ";
-			value.add(req.queryParams("cookie"));
+			sql += " AND CookieName = '" + req.queryParams("cookie" +"'") ;
+			/*value.add(req.queryParams("cookie"));
+			param++;
+			*/
 		}
 		if(req.queryParams("blocked") != null ){
-			int s;
+		/*	int s;
 			if(req.queryParams("blocked") == "yes"){
 				s = 1;
 			}else{
 				s = 0;
 			}
-			sql += "AND Blocked = ? ";
+			*/
+			sql += " AND Blocked = " + req.queryParams("Blocked");
+			/*param++;
 			value.add(req.queryParams("Blocked"));
+			*/
 		}
 
-		try (PreparedStatement stmt = conn.prepareStatement(sql)) { 
-			for (int i = 0; i < value.size(); i++) { 
-			  stmt.setString(i+1, value.get(i)); 
-			} 
-			 
-		  } catch (SQLException e) { 
-			e.printStackTrace();
-		  } 
-		
+	//	sql += 	" ORDER BY TimeOfProduction DESC ";
 
-		return "{\"pallets\":[]}";
+
+	System.out.println(sql);
+		try {
+			ResultSet rs = stmt.executeQuery( "sql" );
+			try {
+			  while ( rs.next() ) {
+				System.out.println( "Name: " + rs.getString("FULL_NAME") );
+			  }}
+			  catch (SQLException e) {
+				e.printStackTrace();
+				return "{\"status\": \"error\"}";
+			} finally {
+			  try { rs.close(); } catch (Exception foo) { }
+			}}
+			catch (SQLException e) {
+				e.printStackTrace();
+				return "{\"status\": \"error\"}";
+		  } finally {
+			try { stmt.close(); } catch (Exception foo) { }
+		  
+		 
+		}
+	}catch(SQLException e) {
+		e.printStackTrace();
+	}
+		
+		return "{}";
 	}
 
 	/*TODO: Fix syntax, properly utilize the Reset.sql file (or redo?)
@@ -139,18 +182,17 @@ public class Database {
 	public String reset(Request req, Response res) throws IOException {
 		String sqlRead = readFile("Reset.sql");
 		String[] sqlSplit = sqlRead.split(Pattern.quote(";"));
-
 		for (String sql : sqlSplit) {
 			sql += ";" ;
 			try (PreparedStatement ps = conn.prepareStatement(sql)) {
-				ps.executeUpdate();
+				ps.executeUpdate();				
 			} catch (SQLException e) {
 				e.printStackTrace();
 				return "{\"status\": \"error\"}";
 			}
 		}
+		return "{\"status\": \"ok\"}";
 
-		return "{\"status\": \"ok\"}";   // For this endpoint, return the following JSON object: "status": "ok"
 	}
 
 	public String createPallet(Request req, Response res) {
