@@ -72,4 +72,14 @@ INSERT INTO Cookie VALUES
 ('Nut ring'),
 ('Tango');
 
+INSERT INTO Company(companyName,address) VALUES
+('Bjudkakor AB', 'Ystad'),
+('Finkakor AB', 'Helsingborg'),
+('Gästkakor AB', 'Hässleholm'),
+('Kaffebröd AB', 'Landskrona'),
+('Kalaskakor AB', 'Trelleborg'),
+('Partykakor AB', 'Kristianstad'),
+('Skånekakor AB', 'Perstorp'),
+('Småbröd AB', 'Malmö');
+
 SET FOREIGN_KEY_CHECKS = 1;
