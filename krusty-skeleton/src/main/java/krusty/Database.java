@@ -30,6 +30,8 @@ public class Database {
 
 	private static int COOKIE_MULT = 54; // amount of cookies in a pallet
 
+	//TODO: För flera metoder returneras inget status när de genomförs, är detta som det ska eller är något fel?
+
 
 	public void connect() {
 			try {
@@ -88,7 +90,6 @@ public class Database {
 	}
 
 
-	
 	public String getPallets(Request req, Response res) {
 
 		Statement stmt;
@@ -151,8 +152,8 @@ public class Database {
 		e.printStackTrace();
 	}
 		
-		return "{}";
-	}
+	return "{\"status\": \"Pallet fetch ok\"}";
+}
 
 
 	// TODO: reset behöver fylla i orders, shippedin m.m för att pallets ska kunna läsas
@@ -169,10 +170,11 @@ public class Database {
 				return "{\"status\": \"error\"}";
 			}
 		}
-		return "{\"status\": \"ok\"}";
+		return "{\"status\": \"reset ok\"}";
 
 	}
 
+	// TODO: Fixa så att return blir ok?
 	public String createPallet(Request req, Response res) {
 		String sql0 = 	"SELECT count(*) as inList FROM Cookie " +
 						"WHERE CookieName = ? ";
