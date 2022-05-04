@@ -12,18 +12,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class Database {
 	/**
 	 * Modify it to fit your environment and then use this string when connecting to your database!
 	 */
-	private static final String jdbcString = "jdbc:mysql://localhost/project?serverTimezone=UTC";
-
-	// For use with MySQL or PostgreSQL
 	private static final String jdbcUsername = "root";
 	private static final String jdbcPassword = "password";
+	private static final String jdbcServer = "localhost";
+	private static final String jdbcDatabase = "project";
+	private static final String jdbcString = "jdbc:mysql://" + jdbcServer + "/" + jdbcDatabase;
+
+	// For use with MySQL or PostgreSQL
+	
 	private Connection conn = null;
 
 	private static int COOKIE_MULT = 54; // amount of cookies in a pallet
@@ -39,7 +41,6 @@ public class Database {
 			}
 		}
 
-	// TODO: Implement and change output in all methods below!
 
 	public String getCustomers(Request req, Response res) {
 		String sql = "SELECT companyName as name, address FROM Company";
@@ -103,7 +104,7 @@ public class Database {
 					 "USING (PalletNumber) " +
 					 "LEFT JOIN Orders " +
 					 "USING (OrderNumber) " +
-					 "WHERE PalletNumber IS NOT NULL "; // TODO: ska man inte kunna vÃ¤lja vad i select som ska visas. JÃ¤mfÃ¶r med expectedpalletsbycookie
+					 "WHERE PalletNumber IS NOT NULL "; // TODO: ska man inte kunna välja vad i select som ska visas. Jämför med expectedpalletsbycookie
 		
 		if(req.queryParams("from") != null ){
 			sql += " AND TimeOfProduction > " + req.queryParams("from");
@@ -154,7 +155,7 @@ public class Database {
 	}
 
 
-	// TODO: reset behÃ¶ver fylla i orders, shippedin m.m fÃ¶r att pallets ska kunna lÃ¤sas
+	// TODO: reset behöver fylla i orders, shippedin m.m för att pallets ska kunna läsas
 
 	public String reset(Request req, Response res) throws IOException {
 		String sqlRead = readFile("Reset.sql");
@@ -248,6 +249,7 @@ public class Database {
 
 			conn.commit();
             conn.setAutoCommit(true);
+			
 		}
 
 		} catch(SQLException e) {
