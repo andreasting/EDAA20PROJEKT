@@ -15,14 +15,14 @@ DROP TABLE IF EXISTS Orders;
 
 
 -- Create tables
-CREATE TABLE Ingredient (
-    IngredientName VARCHAR(200),
-    StoredAmount INT,
-    LastDelivery DATETIME,
-    QuantityOrdered INT,
-    Unit VARCHAR(200),
-    PRIMARY KEY (IngredientName)
-);
+CREATE TABLE Ingredient ( 
+    IngredientName VARCHAR(200), 
+    StoredAmount INT, 
+    LastDelivery DATETIME, 
+    QuantityOrdered INT, 
+    Unit VARCHAR(2), 
+    PRIMARY KEY (IngredientName), 
+    CHECK(StoredAmount >=0) );
 
 CREATE TABLE Cookie (
     CookieName VARCHAR(200),
@@ -80,7 +80,7 @@ create table Company(
 );
 
 create table Orders(
-    OrderNumber INT,
+    OrderNumber INT NOT NULL AUTO_INCREMENT,
     companyName VARCHAR(200),
     shippedDate DATETIME,
     PRIMARY KEY(OrderNumber),
