@@ -19,11 +19,11 @@ public class Database {
 	/**
 	 * Modify it to fit your environment and then use this string when connecting to your database!
 	 */
-	private static final String jdbcString = "jdbc:mysql://localhost/hemmadb?serverTimezone=UTC";
+	private static final String jdbcString = "jdbc:mysql://localhost/project?serverTimezone=UTC";
 
 	// For use with MySQL or PostgreSQL
-	private static final String jdbcUsername = "dbpro";
-	private static final String jdbcPassword = "serveradmin1337";
+	private static final String jdbcUsername = "root";
+	private static final String jdbcPassword = "password";
 	private Connection conn = null;
 
 	private static int COOKIE_MULT = 5400; // 15*10*36 amount of cookies in a pallet
@@ -116,17 +116,18 @@ public class Database {
 
 		}
 		if(req.queryParams("cookie") != null ){
-			sql += " AND CookieName = '" + req.queryParams("cookie") + "'" ;
+			sql += " AND ProductName = '" + req.queryParams("cookie") + "'" ;
 
 		}
 		if(req.queryParams("blocked") != null ){
-
-			sql += " AND Blocked = " + req.queryParams("Blocked");
+			
+			sql += " AND Blocked = " + getBlockedArg(req.queryParams("blocked"));;
 
 		}
 
 	sql += ";";
-	// System.out.println(sql); troubleshooting
+	
+	System.out.println(sql); 
 
 		try {
 			ResultSet rs = stmt.executeQuery(sql);
@@ -276,7 +277,19 @@ public class Database {
 		return "";
 	}
 	// Repurposed method from krustytests
+
+
+protected String getBlockedArg(String val){
+	switch(val){
+		case "yes":
+		val = "1";
+		break;
+
+		case "no":
+		val = "0";
+		break;
+	}
+	return val;
 }
 
-
-
+}
