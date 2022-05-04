@@ -127,7 +127,7 @@ public class Database {
 
 	sql += ";";
 
-	System.out.println(sql); 
+	// System.out.println(sql); for troubleshooting
 
 		try {
 			ResultSet rs = stmt.executeQuery(sql);
@@ -190,13 +190,13 @@ public class Database {
 
 		String cookieName = "";
 		int palletID = 0;
-		System.out.println(sql5);
+		//System.out.println(sql5); for troubleshooting
 
 
 		if(req.queryParams("cookie") != null ){
 			cookieName = req.queryParams("cookie");
 		} else {
-			System.out.print("-------1------------"+cookieName);
+			System.out.print("-------1------------"+cookieName); //For troubleshooting
 			return "{\"status\": \"error no cookieName\"}";
 		}
 
@@ -209,7 +209,7 @@ public class Database {
 			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
             conn.setAutoCommit(false);
 
-			System.out.print("--------------------------"+cookieName);
+		//	System.out.print("--------------------------"+cookieName); For troubleshooting
 			ps0.setString(1, cookieName);
 
 			ResultSet rs0 = ps0.executeQuery();
