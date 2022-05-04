@@ -99,7 +99,7 @@ public class Database {
 		
 		String sql = "SELECT PalletNumber as id, ProductName as cookie, TimeOfProduction as production_date, companyName as customer, IF(Blocked, 'yes', 'no') as blocked " +	
 					 "FROM Pallet " +
-					 "LEFT JOIN StoredIn " +
+					 "RIGHT JOIN StoredIn " +
 					 "USING (PalletNumber) " +
  					 "LEFT JOIN ShippedIn " +
 					 "USING (PalletNumber) " +
@@ -184,8 +184,14 @@ public class Database {
 		String sql4=	"SELECT max(PalletNumber) as lastPallet " +
 						"FROM Pallet";
 
+		String sql5 = 	"INSERT INTO StoredIN(CookieName,PalletNumber)" +
+						"VALUES (?, ?)";
+
+
 		String cookieName = "";
 		int palletID = 0;
+		System.out.println(sql5);
+
 
 		if(req.queryParams("cookie") != null ){
 			cookieName = req.queryParams("cookie");
@@ -198,7 +204,8 @@ public class Database {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			PreparedStatement ps2 = conn.prepareStatement(sql2);
 			PreparedStatement ps4 = conn.prepareStatement(sql4);
-			){
+			PreparedStatement ps5 = conn.prepareStatement(sql5)) {
+			{
 			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
             conn.setAutoCommit(false);
 
@@ -233,9 +240,13 @@ public class Database {
 			while(rs4.next()){
 				palletID = rs4.getInt("lastPallet");
 			}
+			ps5.setString(1, cookieName);
+			ps5.setInt(2, palletID); 
+			ps5.executeUpdate();
 
 			conn.commit();
             conn.setAutoCommit(true);
+		}
 
 		} catch(SQLException e) {
             try {
@@ -249,6 +260,10 @@ public class Database {
 		
 		return "{\"status\": \"ok\",\n\"id\": " + palletID + "}";
 	}
+
+	
+
+	
 
 	public boolean updateIngredient(String name,int amount){
 		String sql = 	"UPDATE Ingredient SET " + "StoredAmount = StoredAmount - ? "+
