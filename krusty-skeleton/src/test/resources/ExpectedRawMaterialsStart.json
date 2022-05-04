@@ -1,5 +1,5 @@
 {
-  "raw-materials": [
+  "ingredient": [
     {"name": "Bread crumbs", "amount": 500000, "unit": "g"},
     {"name": "Butter", "amount": 500000, "unit": "g"},
     {"name": "Chocolate", "amount": 500000, "unit": "g"},

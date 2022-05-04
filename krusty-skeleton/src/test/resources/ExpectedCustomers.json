@@ -1,5 +1,5 @@
 {
-  "customers": [
+  "company": [
     {"name": "Bjudkakor AB", "address": "Ystad"},
     {"name": "Finkakor AB", "address": "Helsingborg"},
     {"name": "Gästkakor AB", "address": "Hässleholm"},

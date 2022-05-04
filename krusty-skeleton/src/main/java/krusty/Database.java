@@ -26,7 +26,7 @@ public class Database {
 	private static final String jdbcPassword = "password";
 	private Connection conn = null;
 
-	private static int COOKIE_MULT = 5400; // 15*10*36 amount of cookies in a pallet
+	private static int COOKIE_MULT = 54; // amount of cookies in a pallet
 
 
 	public void connect() {
@@ -126,7 +126,7 @@ public class Database {
 		}
 
 	sql += ";";
-	
+
 	System.out.println(sql); 
 
 		try {
