@@ -87,9 +87,7 @@ public class Database {
 	}
 
 
-	/* TODO - Find out why JDBC is crying about our syntax
-
-	*/
+	
 	public String getPallets(Request req, Response res) {
 
 		Statement stmt;
@@ -132,13 +130,19 @@ public class Database {
 		try {
 			ResultSet rs = stmt.executeQuery(sql);
 			return Jsonizer.toJson(rs, "pallets");
-			//rs.close(); ? TODO: behövs?
+
+			
 		
 		} catch (SQLException e) {
 				e.printStackTrace();
 				return "{\"status\": \"error\"}";
 		} finally {
-			try { stmt.close(); } catch (Exception foo) { }
+			try { 
+				stmt.close();
+			 } 	
+				catch (Exception foo) { 
+
+				}
 		  
 
 		}
@@ -149,8 +153,6 @@ public class Database {
 		return "{}";
 	}
 
-	/*TODO: åäö in reset.sql when file is read
-	*/
 
 	// TODO: reset behöver fylla i orders, shippedin m.m för att pallets ska kunna läsas
 
