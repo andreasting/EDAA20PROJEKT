@@ -30,8 +30,6 @@ public class Database {
 
 	private static int COOKIE_MULT = 54; // amount of cookies in a pallet
 
-	//TODO: För flera metoder returneras inget status när de genomförs, är detta som det ska eller är något fel?
-
 
 	public void connect() {
 			try {
@@ -105,8 +103,7 @@ public class Database {
 					 "USING (PalletNumber) " +
 					 "LEFT JOIN Orders " +
 					 "USING (OrderNumber) " +
-					 "WHERE PalletNumber IS NOT NULL "; // TODO: ska man inte kunna välja vad i select som ska visas. Jämför med expectedpalletsbycookie
-		
+					 "WHERE PalletNumber IS NOT NULL "; 
 		if(req.queryParams("from") != null ){
 			sql += " AND TimeOfProduction > " + req.queryParams("from");
 
@@ -156,7 +153,6 @@ public class Database {
 }
 
 
-	// TODO: reset behöver fylla i orders, shippedin m.m för att pallets ska kunna läsas
 
 	public String reset(Request req, Response res) throws IOException {
 		String sqlRead = readFile("Reset.sql");
@@ -174,7 +170,6 @@ public class Database {
 
 	}
 
-	// TODO: Fixa så att return blir ok?
 	public String createPallet(Request req, Response res) {
 		String sql0 = 	"SELECT count(*) as inList FROM Cookie " +
 						"WHERE CookieName = ? ";
@@ -301,16 +296,18 @@ public class Database {
 
 
 protected String getBlockedArg(String val){
+	
 	switch(val){
 		case "yes":
-		val = "1";
-		break;
+		return "1";
 
 		case "no":
-		val = "0";
-		break;
+		return "0";
+
+		default:
+		return null;
 	}
-	return val;
+	
 }
 
 }
