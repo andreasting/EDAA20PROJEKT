@@ -19,9 +19,9 @@ public class Database {
 
 	private static final String jdbcUsername = "hbg22";
 	private static final String jdbcPassword = "zva048pv";
-	private static final String jdbcServer = "localhost";
-	private static final String jdbcDatabase = "project";
-	private static final String jdbcString = "jdbc:mysql://" + jdbcServer + "/" + jdbcDatabase;
+	//private static final String jdbcServer = "localhost";
+	// private static final String jdbcDatabase = "project";		
+	private static final String jdbcString = "jdbc:mysql://puccini.cs.lth.se/hbg22";
 
 
 	// For use with MySQL or PostgreSQL
