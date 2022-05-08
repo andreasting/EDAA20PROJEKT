@@ -105,11 +105,11 @@ public class Database {
 					 "USING (OrderNumber) " +
 					 "WHERE PalletNumber IS NOT NULL "; 
 		if(req.queryParams("from") != null){
-			sql += " AND Pallet.TimeOfProduction > '" + req.queryParams("from") + "'";
+			sql += " AND Pallet.TimeOfProduction >= '" + req.queryParams("from") + "'";
 
 		}	
 		if(req.queryParams("to") != null ){
-			sql += " AND Pallet.TimeOfProduction < '" + req.queryParams("to") + "'" ;
+			sql += " AND Pallet.TimeOfProduction <= '" + req.queryParams("to") + "'" ;
 
 		}
 		if(req.queryParams("cookie") != null ){
@@ -187,7 +187,7 @@ public class Database {
 		String sql4=	"SELECT max(PalletNumber) as lastPallet " +
 						"FROM Pallet";
 
-		String sql5 = 	"INSERT INTO StoredIn(CookieName,PalletNumber, )" +
+		String sql5 = 	"INSERT INTO StoredIn(CookieName,PalletNumber) " +
 						"VALUES (?, ?)";
 
 
