@@ -36,21 +36,21 @@ public class KrustyTests {
 	@Test
 	public void test01Customers() throws JSONException {
 		String expected = readFile("ExpectedCustomers.json");
-		String actual = getURL("company");
+		String actual = getURL("customers");
 		JSONAssert.assertEquals(expected, actual, false);
 	}
 	
 	@Test
 	public void test02Cookies() throws JSONException {
 		String expected = readFile("ExpectedCookies.json");
-		String actual = getURL("cookie");
+		String actual = getURL("cookies");
 		JSONAssert.assertEquals(expected, actual, false);
 	}
 
 	@Test
 	public void test03RawMaterials() throws JSONException {
 		String expected = readFile("ExpectedRawMaterialsStart.json");
-		String actual = getURL("ingredient");
+		String actual = getURL("raw-materials");
 		JSONAssert.assertEquals(expected, actual, false);
 	}
 
@@ -65,7 +65,7 @@ public class KrustyTests {
 		createPallet("Berliner");
 		
 		String expected = readFile("ExpectedRawMaterialsAfterCreatingPallets.json");
-		String actual = getURL("ingredient");
+		String actual = getURL("raw-materials");
 
 		JSONAssert.assertEquals(expected, actual, false);
 	}
@@ -74,14 +74,14 @@ public class KrustyTests {
 	@Test
 	public void test05Pallets() throws JSONException {
 		String expected = readFile("ExpectedPallets.json");
-		String actual = getURL("pallet");
+		String actual = getURL("pallets");
 		JSONAssert.assertEquals(expected, actual, false);
 	}
 	
 	@Test
 	public void test06PalletsByCookie() throws JSONException, UnirestException {
 		String expected = readFile("ExpectedPalletsByCookie.json");
-		String actual = Unirest.get(BASE_URL + "pallet")
+		String actual = Unirest.get(BASE_URL + "pallets")
 				.queryString("cookie",  "Nut ring")
 				.asString().getBody();
 		JSONAssert.assertEquals(expected, actual, false);
@@ -94,7 +94,7 @@ public class KrustyTests {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String today = formatter.format(new Date());
 		
-		String actual = Unirest.get(BASE_URL + "pallet")
+		String actual = Unirest.get(BASE_URL + "pallets")
 				.queryString("cookie",  "Nut ring")
 				.queryString("from", today)
 				.asString().getBody();
@@ -111,7 +111,7 @@ public class KrustyTests {
 		calendar.add(Calendar.YEAR, 1);
 		String nextYear = formatter.format(calendar.getTime());
 		
-		String actual = Unirest.get(BASE_URL + "pallet")
+		String actual = Unirest.get(BASE_URL + "pallets")
 				.queryString("cookie",  "Nut ring")
 				.queryString("from", nextYear)
 				.asString().getBody();
@@ -147,7 +147,7 @@ public class KrustyTests {
 	
 	protected String createPallet(String cookie) {
 		try {
-			HttpResponse<String> res =  Unirest.post(BASE_URL + "pallet")
+			HttpResponse<String> res =  Unirest.post(BASE_URL + "pallets")
 					.queryString("cookie",  cookie)
 					.asString();
 			return res.getBody();
