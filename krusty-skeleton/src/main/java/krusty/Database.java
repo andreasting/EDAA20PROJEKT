@@ -15,14 +15,14 @@ import java.sql.Statement;
 import java.util.regex.Pattern;
 
 public class Database {
-	/**
-	 * Modify it to fit your environment and then use this string when connecting to your database!
-	 */
+	 
+
 	private static final String jdbcUsername = "root";
 	private static final String jdbcPassword = "password";
 	private static final String jdbcServer = "localhost";
 	private static final String jdbcDatabase = "project";
 	private static final String jdbcString = "jdbc:mysql://" + jdbcServer + "/" + jdbcDatabase;
+
 
 	// For use with MySQL or PostgreSQL
 	
@@ -43,7 +43,7 @@ public class Database {
 
 
 	public String getCustomers(Request req, Response res) {
-		String sql = "SELECT companyName as name, address FROM Company";
+		String sql = "SELECT CompanyName as name, address FROM Company";
 		try (PreparedStatement ps = conn.prepareStatement(sql)) {
 			ResultSet resultSet = ps.executeQuery();
 			return Jsonizer.toJson(resultSet, "customers");
@@ -95,7 +95,7 @@ public class Database {
 		stmt = conn.createStatement();
 		 
 		
-		String sql = "SELECT PalletNumber as id, ProductName as cookie, TimeOfProduction as production_date, companyName as customer, IF(Blocked, 'yes', 'no') as blocked " +	
+		String sql = "SELECT PalletNumber as id, ProductName as cookie, TimeOfProduction as production_date, CompanyName as customer, IF(Blocked, 'yes', 'no') as blocked " +	
 					 "FROM Pallet " +
 					 "RIGHT JOIN StoredIn " +
 					 "USING (PalletNumber) " +
@@ -123,8 +123,6 @@ public class Database {
 		}
 
 	sql += ";";
-
-	// System.out.println(sql); for troubleshooting
 
 		try {
 			ResultSet rs = stmt.executeQuery(sql);
@@ -160,15 +158,19 @@ public class Database {
 		for (String sql : sqlSplit) {
 			sql += ";" ;
 			try (PreparedStatement ps = conn.prepareStatement(sql)) {
-				ps.executeUpdate();				
+				ps.executeUpdate();
+
+						
+
 			} catch (SQLException e) {
 				e.printStackTrace();
 				return "{\"status\": \"error\"}";
 			}
 		}
-		return "{\"status\": \"reset ok\"}";
-
+		return "{\"status\": \"ok\"}";
+	
 	}
+	
 
 	public String createPallet(Request req, Response res) {
 		String sql0 = 	"SELECT count(*) as inList FROM Cookie " +

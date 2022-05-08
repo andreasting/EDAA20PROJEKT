@@ -75,11 +75,11 @@ INSERT INTO Cookie VALUES
 INSERT INTO Company(companyName,address) VALUES
 ('Bjudkakor AB', 'Ystad'),
 ('Finkakor AB', 'Helsingborg'),
-('GÃ¤stkakor AB', 'HÃ¤ssleholm'),
-('KaffebrÃ¶d AB', 'Landskrona'),
+('Gästkakor AB', 'Hässleholm'),
+('Kaffebröd AB', 'Landskrona'),
 ('Kalaskakor AB', 'Trelleborg'),
 ('Partykakor AB', 'Kristianstad'),
-('SkÃ¥nekakor AB', 'Perstorp'),
-('SmÃ¥brÃ¶d AB', 'MalmÃ¶');
+('Skånekakor AB', 'Perstorp'),
+('Småbröd AB', 'Malmö');
 
 SET FOREIGN_KEY_CHECKS = 1;

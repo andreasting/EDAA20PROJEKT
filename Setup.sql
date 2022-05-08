@@ -73,18 +73,18 @@ CREATE TABLE Ordered(
 );
 
 create table Company(
-    companyName VARCHAR(200),
+    CompanyName VARCHAR(200),
     address VARCHAR(200),
     phoneNbr INT(10),
-    PRIMARY KEY(companyName) 
+    PRIMARY KEY(CompanyName) 
 );
 
 create table Orders(
     OrderNumber INT NOT NULL AUTO_INCREMENT,
-    companyName VARCHAR(200),
+    CompanyName VARCHAR(200),
     shippedDate DATETIME,
     PRIMARY KEY(OrderNumber),
-    FOREIGN KEY(companyName) references Company(companyName)
+    FOREIGN KEY(CompanyName) references Company(CompanyName)
 );
 
 -- Insert start values
