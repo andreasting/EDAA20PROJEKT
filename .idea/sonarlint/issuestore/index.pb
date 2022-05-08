@@ -67,3 +67,9 @@ o
 ?krusty-skeleton/src/test/resources/ExpectedPalletsByCookie.json,e\5\e5b70c43434b158dbd9b3277072f33c7eddc8225
 I
 krusty-skeleton/README.md,6\1\6125fcebebe59be1fed043733ccfabfb231f32ce
+b
+2krusty-skeleton/src/main/java/krusty/Database.java,2\f\2fe71eab776cb352889c7e33957d9bd6d939f8d5
+9
+	Setup.sql,f\0\f09379a101df894bfc84778c791ed0a7c21eecd5
+@
+initial-data.sql,1\f\1f175b6cb0ea7d001116eb3195f90cc428a434b9

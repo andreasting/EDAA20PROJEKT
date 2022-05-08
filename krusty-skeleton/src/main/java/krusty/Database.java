@@ -104,12 +104,12 @@ public class Database {
 					 "LEFT JOIN Orders " +
 					 "USING (OrderNumber) " +
 					 "WHERE PalletNumber IS NOT NULL "; 
-		if(req.queryParams("from") != null ){
-			sql += " AND TimeOfProduction > " + req.queryParams("from");
+		if(req.queryParams("from") != null){
+			sql += " AND Pallet.TimeOfProduction > '" + req.queryParams("from") + "'";
 
 		}	
 		if(req.queryParams("to") != null ){
-			sql += " AND TimeOfProduction < " + req.queryParams("to") ;
+			sql += " AND Pallet.TimeOfProduction < '" + req.queryParams("to") + "'" ;
 
 		}
 		if(req.queryParams("cookie") != null ){
@@ -123,6 +123,7 @@ public class Database {
 		}
 
 	sql += ";";
+	System.out.println(sql);
 
 		try {
 			ResultSet rs = stmt.executeQuery(sql);
