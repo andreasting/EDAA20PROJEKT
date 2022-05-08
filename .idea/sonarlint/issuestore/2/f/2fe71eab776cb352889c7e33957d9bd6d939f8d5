@@ -1,0 +1,36 @@
+
+]
+java:S1192s"GDefine a constant instead of duplicating this literal "cookie" 4 times.(ÒñŸ‚
+P
+java:S1141"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ
+Q
+java:S1141‰"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ
+I
+java:S1199Ò"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ
+o	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(Ö”£Ï
+o	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(Æ¨Ä°
+t	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(…ÏçÐýÿÿÿÿ
+q
+java:S3008"VRename this field "COOKIE_MULT" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(„ûÖ°ùÿÿÿÿ
+Q	java:S125"<This block of commented-out lines of code should be removed.(ÅÀš
+S	java:S106'"9Replace this use of System.out or System.err by a logger.(Þàš¬øÿÿÿÿ
+N
+java:S1172-"3Remove these unused method parameters "req", "res".(©®µûÿÿÿÿ
+N
+java:S11728"3Remove these unused method parameters "req", "res".(îÄŽûÿÿÿÿÿ
+N
+java:S1172C"3Remove these unused method parameters "req", "res".(«Ì”Èþÿÿÿÿ
+I
+java:S1172N"3Remove these unused method parameters "req", "res".(è©²Â
+@
+java:S1172["*Remove this unused method parameter "res".(—îë»
+7
+java:S1116y"Remove this empty statement.(ëîÁÄúÿÿÿÿ
+D	java:S108Œ")Either remove or fill this block of code.(Ä†£îþÿÿÿÿ
+ˆ
+java:S1130›"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(÷–É³øÿÿÿÿ
+O
+java:S1172›"3Remove these unused method parameters "req", "res".(÷–É³øÿÿÿÿ
+F
+java:S1172¯"*Remove this unused method parameter "res".(þˆ‰¾ùÿÿÿÿ
+O	java:S106É"9Replace this use of System.out or System.err by a logger.(¨ìÝ¬
