@@ -17,8 +17,8 @@ import java.util.regex.Pattern;
 public class Database {
 	 
 
-	private static final String jdbcUsername = "root";
-	private static final String jdbcPassword = "password";
+	private static final String jdbcUsername = "hbg22";
+	private static final String jdbcPassword = "zva048pv";
 	private static final String jdbcServer = "localhost";
 	private static final String jdbcDatabase = "project";
 	private static final String jdbcString = "jdbc:mysql://" + jdbcServer + "/" + jdbcDatabase;
