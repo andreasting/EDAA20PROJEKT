@@ -186,7 +186,7 @@ public class Database {
 		String sql4=	"SELECT max(PalletNumber) as lastPallet " +
 						"FROM Pallet";
 
-		String sql5 = 	"INSERT INTO StoredIN(CookieName,PalletNumber)" +
+		String sql5 = 	"INSERT INTO StoredIn(CookieName,PalletNumber, )" +
 						"VALUES (?, ?)";
 
 
